@@ -19,7 +19,21 @@ module KnifeInfo
     # :default => default_value
 
     def run
-      ui.color('Testing!!!', :bold)
+      if check_for_knife_rb
+        url = extract_url
+        puts url
+      end
+    end
+
+    private
+    def check_for_knife_rb
+      knife_rb_path = File.join(ENV["HOME"], '.chef', 'knife.rb')
+      File.exist? knife_rb_path
+    end
+
+    def extract_url
+      knife_rb_path = File.join(ENV["HOME"], '.chef', 'knife.rb')
+      File.readlines(knife_rb_path).grep(/chef_server_url/).first.split().last.gsub(/'/, '')
     end
   end
 end
